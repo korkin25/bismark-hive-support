@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+#testgit
+
 echo $* > $0.log
 set >> > $0.log
 
