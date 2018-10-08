@@ -1,0 +1,6 @@
+#!/bin/sh
+
+prog="$1"; shift
+echo "Running $prog $*"
+"$prog" $*
+
