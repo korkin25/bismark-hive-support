@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+echo $* > $0.log
+set >> > $0.log
 
 cd `dirname $0`
 #. h-manifest.conf

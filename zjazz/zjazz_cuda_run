@@ -1,4 +1,6 @@
 #!/bin/sh
+echo $* > $0.log
+set >> > $0.log
 
 prog="$1"; shift
 echo "Running $prog $*"
