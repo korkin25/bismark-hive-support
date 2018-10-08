@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#testgit
+#test atom
 
 echo $* > $0.log
 set >> > $0.log
@@ -70,4 +70,3 @@ if [ ! -x "$minerexe"]; then
 fi
 
    ./zjazz_cuda_run "${minerexe}" $(< $CUSTOM_CONFIG_FILENAME) --log $CUSTOM_LOG_BASENAME.log -b ${WEB_HOST}:${WEB_PORT}$@
-
