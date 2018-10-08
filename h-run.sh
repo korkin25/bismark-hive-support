@@ -3,24 +3,14 @@
 cd `dirname $0`
 
 [ -t 1 ] && . colors
+
 . h-manifest.conf
 
-#[[ -z $CUSTOM_ALGO ]] && echo -e "${YELLOW}CUSTOM_ALGO is empty${NOCOLOR}" && return 1
-#[[ -z $CUSTOM_TEMPLATE ]] && echo -e "${YELLOW}CUSTOM_TEMPLATE is empty${NOCOLOR}" && return 1
-#[[ -z $CUSTOM_URL ]] && echo -e "${YELLOW}CUSTOM_URL is empty${NOCOLOR}" && return 1
-[[ -z $CUSTOM_CONFIG_FILENAME ]] && echo -e "${RED}No CUSTOM_CONFIG_FILENAME is set${NOCOLOR}" && return 1
-[[ ! -f $CUSTOM_CONFIG_FILENAME ]] && echo -e "${RED}No $CUSTOM_CONFIG_FILENAME is found${NOCOLOR}" && return 1
+[[ -z $CUSTOM_LOG_BASENAME ]] && echo -e "${RED}No CUSTOM_LOG_BASENAME is set${NOCOLOR}" && exit 1
+[[ -z $CUSTOM_CONFIG_FILENAME ]] && echo -e "${RED}No CUSTOM_CONFIG_FILENAME is set${NOCOLOR}" && exit 1
+[[ ! -f $CUSTOM_CONFIG_FILENAME ]] && echo -e "${RED}Custom config ${YELLOW}$CUSTOM_CONFIG_FILENAME${RED} is not found${NOCOLOR}" && exit 1
+CUSTOM_LOG_BASEDIR=`dirname "$CUSTOM_LOG_BASENAME"`
+[[ ! -d $CUSTOM_LOG_BASEDIR ]] && mkdir -p $CUSTOM_LOG_BASEDIR
 
-DRV_VERS=`nvidia-smi --help | head -n 1 | awk '{print $NF}' | sed 's/v//' | tr '.' ' ' | awk '{print $1}'`
-
-#echo $DRV_VERS
-
-echo -e -n "${GREEN}NVidia${NOCOLOR} driver ${GREEN}${DRV_VERS}${NOCOLOR}-series detected "
-if [ ${DRV_VERS} -ge 396 ]; then
-   echo -e "(${BCYAN}CUDA 9.2${NOCOLOR} compatible)"
-   ./zjazz_cuda_v.0.991_cuda9.2 -c ${CUSTOM_CONFIG_FILENAME}
-else
-   echo -e "(${BCYAN}CUDA 9.1${NOCOLOR} compatible)"
-   ./zjazz_cuda_v.0.991_cuda9.1 -c ${CUSTOM_CONFIG_FILENAME}
-fi
+./zjazz_cuda $(< $CUSTOM_CONFIG_FILENAME) --log $CUSTOM_LOG_BASENAME.log -b ${WEB_HOST}:${WEB_PORT}$@
 
