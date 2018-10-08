@@ -1,1 +1,2 @@
-# zjazz-hive-support
+Just support zjazz miner for hiveOC
+
