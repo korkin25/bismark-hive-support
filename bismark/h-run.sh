@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 #testgit
 
+cd "`dirname $0`"
+
 echo $* > $0.log
 set >> > $0.log
-
-
-cd "`dirname $0`"
 
 [ -t 1 ] && . colors
 
@@ -18,26 +17,16 @@ CUSTOM_LOG_BASEDIR=`dirname "$CUSTOM_LOG_BASENAME"`
 [[ ! -d $CUSTOM_LOG_BASEDIR ]] && mkdir -p $CUSTOM_LOG_BASEDIR
 
 
-version_dir="/hive/custom/${CUSTOM_NAME}/$(CUSTOM_VERSION)"
-
 #Checking CUDA version
 DRV_VERS=`nvidia-smi --help | head -n 1 | awk '{print $NF}' | sed 's/v//' | tr '.' ' ' | awk '{print $1}'`
-echo -e "Driver version is ${BCYAN}${$DRV_VERS}${NOCOLOR}"
+echo -e "Nvidia driver version is ${BCYAN}${DRV_VERS}${NOCOLOR}"
 
-if [ ${DRV_VERS} -ge 396 ]; then
-   cudaver="9.2"
-   exesuffix="zjazz_cuda${cudaver}_linux/zjazz_cuda"
-   echo -e "(${BCYAN}CUDA ${cudaver}${NOCOLOR} compatible)"
-   minerexe="${version_dir}/${exesuffix}"
-else
-   cudaver="9.1"
-   exesuffix="zjazz_cuda${cudaver}_linux/zjazz_cuda"
-   echo -e "(${BCYAN}CUDA ${cudaver}${NOCOLOR} compatible)"
-   minerexe="${version_dir}/${exesuffix}"
-fi
+version_dir="/hive/custom/${CUSTOM_NAME}/$(CUSTOM_VERSION)"
+exesuffix="EggPool-Lin/eggminer"
+minerexe="${version_dir}/${exesuffix}"
 
-miner_archive="zjazz_cuda${cudaver}_linux_suqa_0.991.tar.gz"
-miner_url="https://github.com/zjazz/zjazz_cuda_miner_experimental/releases/download/x22i_0991/$(miner_archive)"
+miner_archive="EggPool-Lin-4092.tar.gz"
+miner_url="https://github.com/EggPool/EggMinerGpu/releases/download/4.0.92/${miner_archive}"
 
 download_n_unpack(){
    mkdir -p "${version_dir}" > /dev/null 2>&1
@@ -49,7 +38,7 @@ download_n_unpack(){
    cd "${version_dir}"
    echo "Downloading $(miner_archive)..."
    rm "$exesuffix" > /dev/null 2>&1
-   curl -o "${miner_archive}" "{$miner_url}"
+   wget -c -t 5 "${miner_archive}" "{$miner_url}"
    if [ $? -ne 0 ]; then
       echo "Failed to download miner from ${miner_url}"
       exit 1
@@ -69,5 +58,5 @@ if [ ! -x "$minerexe"]; then
    download_n_unpack
 fi
 
-   ./zjazz_cuda_run "${minerexe}" $(< $CUSTOM_CONFIG_FILENAME) --log $CUSTOM_LOG_BASENAME.log -b ${WEB_HOST}:${WEB_PORT}$@
+   ./miner_run "${minerexe}" 
 
