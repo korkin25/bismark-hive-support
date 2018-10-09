@@ -35,7 +35,6 @@ download_n_unpack(){
       exit 1
    fi
 
-   cd "${version_dir}"
    echo "Downloading $(miner_archive)..."
    rm "$exesuffix" > /dev/null 2>&1
    wget -c -t 5 "${miner_archive}" "{$miner_url}"
