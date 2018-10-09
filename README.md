@@ -1,1 +1,1 @@
-Hive support for Bsmark eggpool
+Hive support for Bimark eggpool
